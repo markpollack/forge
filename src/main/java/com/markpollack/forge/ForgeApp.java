@@ -4,24 +4,19 @@ import java.nio.file.Path;
 
 import com.markpollack.forge.brief.ExperimentBrief;
 import com.markpollack.forge.customization.CustomizationPromptBuilder;
+import com.markpollack.forge.customization.TemplateCustomizer;
 import com.markpollack.forge.template.TemplateCloner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springaicommunity.agents.client.AgentClient;
-import org.springaicommunity.agents.claude.ClaudeAgentModel;
-import org.springaicommunity.agents.claude.ClaudeAgentOptions;
-import org.springaicommunity.agents.model.AgentModel;
 
 /**
  * Main entry point for Forge — creates agent experiment projects from a brief.
  *
- * <p>Commands:</p>
- * <ul>
- *   <li>{@code forge new --brief path/to/brief.yaml --output ~/projects/my-experiment/}
- *       — Creates a new experiment project from a brief</li>
- * </ul>
- *
- * <p>Future commands: {@code forge grow}, {@code forge evaluate}, {@code forge graduate}</p>
+ * <p>Uses a two-phase approach:</p>
+ * <ol>
+ *   <li>Deterministic customization — package rename, pom update, file generation</li>
+ *   <li>LLM customization (optional) — judge stubs, VISION.md content</li>
+ * </ol>
  */
 public class ForgeApp {
 
@@ -31,11 +26,11 @@ public class ForgeApp {
 
 	private final TemplateCloner templateCloner;
 
-	private final CustomizationPromptBuilder promptBuilder;
+	private final TemplateCustomizer templateCustomizer;
 
 	public ForgeApp() {
 		this.templateCloner = new TemplateCloner();
-		this.promptBuilder = new CustomizationPromptBuilder();
+		this.templateCustomizer = new TemplateCustomizer();
 	}
 
 	/**
@@ -58,34 +53,15 @@ public class ForgeApp {
 		logger.info("Cloning template from {}", TEMPLATE_REPO_URL);
 		templateCloner.cloneTemplate(TEMPLATE_REPO_URL, outputDir);
 
-		// 3. Agent does ALL customization
-		String prompt = promptBuilder.build(brief);
-		logger.info("Customization prompt built ({} chars)", prompt.length());
-
-		AgentModel agentModel = createAgentModel(outputDir);
-		AgentClient agent = AgentClient.create(agentModel);
-
-		logger.info("Invoking agent for project customization...");
-		agent.goal(prompt).workingDirectory(outputDir).run();
+		// 3. Deterministic customization (no LLM)
+		templateCustomizer.customize(brief, outputDir);
 
 		logger.info("Project created at {}", outputDir);
 		logger.info("Next steps:");
-		logger.info("  1. Implement your AgentInvoker");
-		logger.info("  2. Write knowledge files");
-		logger.info("  3. Populate dataset workspaces");
-		logger.info("  4. Run: java -jar {}.jar --run-all-variants", brief.artifactId());
-	}
-
-	private AgentModel createAgentModel(Path workingDirectory) {
-		ClaudeAgentOptions options = ClaudeAgentOptions.builder()
-				.model("claude-sonnet-4-20250514")
-				.yolo(true)
-				.build();
-
-		return ClaudeAgentModel.builder()
-				.workingDirectory(workingDirectory)
-				.defaultOptions(options)
-				.build();
+		logger.info("  1. Implement your AgentInvoker: {}AgentInvoker.java", brief.domainName());
+		logger.info("  2. Write knowledge files in knowledge/");
+		logger.info("  3. Write prompts in prompts/");
+		logger.info("  4. Populate dataset workspaces");
 	}
 
 	public static void main(String[] args) {
