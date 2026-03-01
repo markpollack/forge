@@ -1,6 +1,6 @@
 # Forge
 
-Creates agent experiment projects from a YAML brief — clone template, customize via AgentClient, run.
+Creates agent experiment projects from a YAML brief — clone template, customize deterministically, run.
 
 ## Build
 
@@ -13,7 +13,7 @@ Creates agent experiment projects from a YAML brief — clone template, customiz
 ## Usage
 
 ```bash
-forge new --brief path/to/brief.yaml --output ~/projects/my-experiment/
+./mvnw exec:java -Dexec.args="new --brief path/to/brief.yaml --output ~/projects/my-experiment/"
 ```
 
 ## Implementation Progress
@@ -22,14 +22,24 @@ forge new --brief path/to/brief.yaml --output ~/projects/my-experiment/
 
 ## Architecture
 
+Two-phase approach: deterministic customization first, optional LLM for creative tasks.
+
 - `ForgeApp` — Main CLI entry point, routes commands
 - `ExperimentBrief` — Parses YAML brief into structured data
 - `TemplateCloner` — Clones `markpollack/agent-experiment-template` via git
-- `CustomizationPromptBuilder` — Generates AgentClient prompt from brief
+- `TemplateCustomizer` — Deterministic customization: package rename, POM GAV, file generation (~1 second)
+- `CustomizationPromptBuilder` — Generates AgentClient prompt (currently unused, available for creative tasks)
+
+### Template
+
+- Repo: `markpollack/agent-experiment-template`
+- Default package: `com.example.experiment` (compilable as-is)
+- Forge renames to brief's package via line-based string replacement + file moves
 
 ## Dependencies
 
-- `agent-client` (0.10.0-SNAPSHOT) — AgentClient for code customization
-- `spring-ai-claude-agent` — ClaudeAgentModel for agent execution
 - SnakeYAML — Brief parsing
 - Jackson — JSON/YAML serialization
+- SLF4J + Logback — Logging
+- `agent-client` (0.10.0-SNAPSHOT) — Available for optional LLM customization
+- `spring-ai-claude-agent` — ClaudeAgentModel for agent execution

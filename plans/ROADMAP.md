@@ -1,12 +1,12 @@
 # Roadmap: Forge
 
 > **Created**: 2026-03-01T11:35-08:00
-> **Last updated**: 2026-03-01T11:35-08:00
-> **Status**: Stage 1 complete (initial implementation committed)
+> **Last updated**: 2026-03-01T12:30-08:00
+> **Status**: Stage 1 complete (Steps 1.0–1.2)
 
 ## Overview
 
-Forge creates agent experiment projects from a brief — `forge new` scaffolds a runnable experiment project from a YAML brief. Stage 1 (initial implementation) is complete: ForgeApp, ExperimentBrief, TemplateCloner, and CustomizationPromptBuilder are committed and pushed. Stage 2 adds `forge grow` (run variants), Stage 3 adds `forge evaluate` (compare runs), and Stage 4 adds `forge graduate` (extract agent).
+Forge creates agent experiment projects from a brief — `forge new` scaffolds a runnable experiment project from a YAML brief. Two-phase approach: deterministic customization (package rename, POM GAV, file generation) then optional LLM for creative tasks. Template repo (`markpollack/agent-experiment-template`) uses `com.example` as generic default; forge renames to the brief's package via deterministic Java tooling.
 
 > **Before every commit**: Verify ALL exit criteria for the current step are met. Do NOT remove exit criteria to mark a step complete — fulfill them.
 
@@ -19,6 +19,33 @@ Forge creates agent experiment projects from a brief — `forge new` scaffolds a
 **Status**: Complete (committed: `457281c`)
 
 **Deliverables**: ForgeApp CLI, ExperimentBrief YAML parser, TemplateCloner, CustomizationPromptBuilder, ExperimentBrief unit test.
+
+---
+
+### Step 1.1: Deterministic TemplateCustomizer
+
+**Status**: Complete (committed: `d06fd0a`)
+
+**Deliverables**: TemplateCustomizer replacing AgentClient-based customization. Handles package rename (file moves + declaration/import rewrites), POM GAV updates, dataset/config/prompt/knowledge file generation, template file renaming. Runs in ~1 second.
+
+**Key decisions**:
+- Deterministic Java code over LLM for mechanical scaffolding tasks
+- Inspired by refactoring-agent `tools/javax-to-jakarta` regex pattern
+- Template must be a compilable project (no placeholders) — `com.example.experiment`
+- Package rename only when brief specifies a different package
+
+---
+
+### Step 1.2: Template Compilation Fixes
+
+**Status**: Complete (committed: `05afb7b` template, `b5ef6fc` forge)
+
+**Deliverables**: Template compiles on Java 17. Fixed CascadedJury.builder() usage, removed @Nullable from record components, set Java target to 17.
+
+**Key decisions**:
+- Template uses `com.example` as generic default (anyone can use without modification)
+- `io.github.markpollack` is applied by forge when brief specifies it
+- No tuvium references in template or forge source code
 
 ---
 
@@ -128,3 +155,4 @@ plans/learnings/
 | Timestamp | Change | Trigger |
 |-----------|--------|---------|
 | 2026-03-01T11:35-08:00 | Initial draft — Stage 1 already complete | Plan conversion |
+| 2026-03-01T12:30-08:00 | Added Steps 1.1 (TemplateCustomizer) and 1.2 (compilation fixes). Updated overview with two-phase approach and com.example template default. | Bootstrapping session |
