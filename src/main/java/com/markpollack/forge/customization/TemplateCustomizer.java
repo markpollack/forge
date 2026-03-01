@@ -28,9 +28,9 @@ public class TemplateCustomizer {
 
 	private static final Logger logger = LoggerFactory.getLogger(TemplateCustomizer.class);
 
-	private static final String TEMPLATE_PACKAGE = "io.github.markpollack.experiment";
+	private static final String TEMPLATE_PACKAGE = "com.example.experiment";
 
-	private static final String TEMPLATE_GROUP_ID = "io.github.markpollack";
+	private static final String TEMPLATE_GROUP_ID = "com.example";
 
 	private static final String TEMPLATE_ARTIFACT_ID = "agent-experiment-template";
 
