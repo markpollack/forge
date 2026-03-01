@@ -17,7 +17,7 @@ import org.yaml.snakeyaml.Yaml;
  * experiment project.</p>
  *
  * @param name experiment name
- * @param packageName Java package name (e.g., "org.tuvium.experiment.coverage")
+ * @param packageName Java package name (e.g., "com.example.experiment.coverage")
  * @param groupId Maven group ID
  * @param artifactId Maven artifact ID
  * @param agent agent configuration (description, goal)

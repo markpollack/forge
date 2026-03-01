@@ -13,7 +13,7 @@ import org.springaicommunity.agents.claude.ClaudeAgentOptions;
 import org.springaicommunity.agents.model.AgentModel;
 
 /**
- * Main entry point for Forge — Spring Initializr for agent experiments.
+ * Main entry point for Forge — creates agent experiment projects from a brief.
  *
  * <p>Commands:</p>
  * <ul>

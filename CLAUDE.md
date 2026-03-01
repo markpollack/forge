@@ -1,6 +1,6 @@
 # Forge
 
-Spring Initializr for agent experiments — creates runnable experiment projects from a YAML brief.
+Creates agent experiment projects from a YAML brief — clone template, customize via AgentClient, run.
 
 ## Build
 

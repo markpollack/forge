@@ -11,7 +11,7 @@ This is the **Tier 1 compacted summary**. Read this first for the current state 
 
 1. **Template + AgentClient customization pattern works well** — Clone a standard template, then use AgentClient to refactor package names, update pom.xml, and generate domain-specific stubs. The agent does ALL customization via a single prompt.
    - *Source*: Stage 1 implementation
-   - *Impact*: Validates the "Spring Initializr for agents" metaphor
+   - *Impact*: Validates the "scaffold + agent customization" pattern
 
 2. **SnakeYAML handles brief parsing simply** — No need for a schema validation library at this stage. Simple map-based parsing with defaults covers the brief format.
    - *Source*: ExperimentBrief.parse()

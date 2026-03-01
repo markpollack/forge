@@ -6,7 +6,7 @@
 
 ## Overview
 
-Forge is Spring Initializr for agent experiments — `forge new` creates a runnable experiment project from a YAML brief. Stage 1 (initial implementation) is complete: ForgeApp, ExperimentBrief, TemplateCloner, and CustomizationPromptBuilder are committed and pushed. Stage 2 adds `forge grow` (run variants), Stage 3 adds `forge evaluate` (compare runs), and Stage 4 adds `forge graduate` (extract agent).
+Forge creates agent experiment projects from a brief — `forge new` scaffolds a runnable experiment project from a YAML brief. Stage 1 (initial implementation) is complete: ForgeApp, ExperimentBrief, TemplateCloner, and CustomizationPromptBuilder are committed and pushed. Stage 2 adds `forge grow` (run variants), Stage 3 adds `forge evaluate` (compare runs), and Stage 4 adds `forge graduate` (extract agent).
 
 > **Before every commit**: Verify ALL exit criteria for the current step are met. Do NOT remove exit criteria to mark a step complete — fulfill them.
 

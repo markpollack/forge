@@ -61,7 +61,7 @@ class ExperimentBriefTest {
 		assertThat(brief.agent().description()).isEqualTo("Test agent");
 		assertThat(brief.benchmark().dataset()).hasSize(1);
 		assertThat(brief.judges()).hasSize(1);
-		assertThat(brief.judges().getFirst().name()).isEqualTo("TestJudge");
+		assertThat(brief.judges().get(0).name()).isEqualTo("TestJudge");
 		assertThat(brief.variants()).hasSize(2);
 		assertThat(brief.knowledge().files()).containsExactly("docs.md", "patterns.md");
 		assertThat(brief.domainName()).isEqualTo("Test");
